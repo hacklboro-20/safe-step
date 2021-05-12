@@ -65,32 +65,44 @@ const styles = StyleSheet.create({
   }
 });
 
+
+/**
+   * Checks if the line between two points intersects with a cricle
+   * @param  {double} startX Start node x coord
+   * @param  {double} startY Start node y coord
+   * @param  {double} endX End node x coord
+   * @param  {double} endY End node y coord
+   * @param  {double} locationX Users current x coord
+   * @param  {double} locationY Users current y coords
+   * @return {bool} represents whether there is any intersection with the circle
+   */
 function Intersect(startX,startY,endX,endY,locationX,locationY,radius) {
 
-  let m = ((endY) - (startY))/((endX)-(startX)); // Gradient of the line
+  let m = ((endY) - (startY))/((endX)-(startX)); // Gradient of the line between the two points
   let n = (startY) - (m * (startX)); // Y-intercept
   // Setting up discriminant
-  let a = 1 + Math.pow((m),2);
-  let b = -(locationX) * 2 + (m * (n - (locationY))) * 2;
-  let c = Math.pow((locationX),2) + Math.pow((n - (locationY)),2) - Math.pow((radius),2);
+  let a = 1 + Math.pow((m),2);  // 1 + (gradient squared)
+  let b = -(locationX) * 2 + (m * (n - (locationY))) * 2;  
+  let c = Math.pow((locationX),2) + Math.pow((n - (locationY)),2) - Math.pow((radius),2);  // equation of the circle
   
-  let d = Math.pow((b),2) - 4 * a * c; // Discriminant value
-  if (d >= 0) {
+  let d = Math.pow((b),2) - 4 * a * c; // Discriminant value in quadratic formula
+  if (d >= 0) { // there is an intersection
       return true;
   }
-  else{
+  else{ // there is no intersection
       return false;
   }
 }
 
 function hasLeftCircle(currentLocation, points) {
   for (let index = 0; index < points.length-1; index++) {
-    let startPoint = point[index];
-    let endPoint = point[index+1];
+    let startPoint = point[index];  // get the start of the line
+    let endPoint = point[index+1];  // get the end of the line
     
-    if (!Intersect(startPoint[0], startPoint[1], endPoint[0], endPoint[1], currentLocation[0], currentLocation[1], 0.0003)) return false;
+    // if they do not intersect then they have left the circle
+    if (!Intersect(startPoint[0], startPoint[1], endPoint[0], endPoint[1], currentLocation[0], currentLocation[1], 0.0003)) return true;
   }
-  return true; // user has left the circle and therefore need to message
+  return false; // user has left the circle and therefore need to message
 }
 
 
